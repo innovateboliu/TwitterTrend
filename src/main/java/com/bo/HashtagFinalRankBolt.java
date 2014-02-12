@@ -2,8 +2,10 @@ package com.bo;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
@@ -46,9 +48,17 @@ public class HashtagFinalRankBolt extends BaseBasicBolt {
 		if (TwitterTrendUtils.isTickTuple(tuple)) {
 			writer.println("fetch-------------------------------");
 			collector.emit(new Values(pq));
-			while (pq.size() > 0) {
-				TwitterTrendUtils.Pair<String, Integer> pair = pq.remove();
-				writer.println(pair.first + " " + pair.second);
+			List<TwitterTrendUtils.Pair<String, Integer>> list = new ArrayList<TwitterTrendUtils.Pair<String,Integer>>();
+			try {
+				while (pq.size() > 0) {
+					list.add(pq.remove());
+				}
+				for (int i = list.size() - 1; i >= 0; i--) {
+					writer.println(list.get(i).first + " " + list.get(i).second);
+				}
+			}catch (ConcurrentModificationException e) {
+				writer.println("ConcurrentModificationException up!!!");
+				throw e;
 			}
 //			for (TwitterTrendUtils.Pair<String, Integer> pair : pq) {
 //				writer.println(pair.first + " " + pair.second);
@@ -57,15 +67,15 @@ public class HashtagFinalRankBolt extends BaseBasicBolt {
 		} else {
 			PriorityQueue<TwitterTrendUtils.Pair<String, Integer>> newPq = (PriorityQueue<TwitterTrendUtils.Pair<String, Integer>>) tuple.getValue(0);
 			try {
-			for (TwitterTrendUtils.Pair<String, Integer> pair : newPq) {
-				if (pq.contains(pair)) {
-					pq.remove(pair);
+				for (TwitterTrendUtils.Pair<String, Integer> pair : newPq) {
+					if (pq.contains(pair)) {
+						pq.remove(pair);
+					}
+					pq.add(pair);
+					if (pq.size() > DEFAULT_COUNT) {
+						pq.remove();
+					}
 				}
-				pq.add(pair);
-				if (pq.size() > DEFAULT_COUNT) {
-					pq.remove();
-				}
-			}
 			}catch (ConcurrentModificationException e) {
 				writer.println("ConcurrentModificationException!!!");
 				throw e;

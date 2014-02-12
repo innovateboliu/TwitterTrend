@@ -44,8 +44,13 @@ public class HashtagRankBolt extends BaseBasicBolt {
 		if (TwitterTrendUtils.isTickTuple(tuple)) {
 			writer.println("fetch-------------------------------");
 			collector.emit(new Values(pq));
-			for (TwitterTrendUtils.Pair<String, Integer> pair : pq) {
-				writer.println(pair.first + " " + pair.second);
+			try {
+				for (TwitterTrendUtils.Pair<String, Integer> pair : pq) {
+					writer.println(pair.first + " " + pair.second);
+				}
+			}catch (ConcurrentModificationException e) {
+				writer.println("ConcurrentModificationException up!!!");
+				throw e;
 			}
 			writer.flush();
 		} else {
