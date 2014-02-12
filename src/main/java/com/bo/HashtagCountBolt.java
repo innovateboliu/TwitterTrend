@@ -21,14 +21,14 @@ public class HashtagCountBolt extends BaseRichBolt {
 	private OutputCollector collector;
 	private int queryFrequencyInSeconds;
 	private int slideWindowLengthInSeconds;
-	private SlideWindowCounter<String> counter = null;
+	private SlideWindowCounter<HashTag> counter = null;
 	private PrintWriter writer;
 
 	public HashtagCountBolt(int slideWindowLengthInSeconds,
 			int queryFrequencyInSeconds) {
 		this.slideWindowLengthInSeconds = slideWindowLengthInSeconds;
 		this.queryFrequencyInSeconds = queryFrequencyInSeconds;
-		counter = new SlideWindowCounter<String>(
+		counter = new SlideWindowCounter<HashTag>(
 				this.slideWindowLengthInSeconds / this.queryFrequencyInSeconds);
 	}
 
@@ -50,14 +50,14 @@ public class HashtagCountBolt extends BaseRichBolt {
 		
 		if (TwitterTrendUtils.isTickTuple(tuple)) {
 			writer.println("fetch-------------------------------");
-			Map<String, Integer> counts = counter.getWindowCounts();
-			for (Entry<String, Integer> entry : counts.entrySet()) {
-				 collector.emit(new Values(entry.getKey(), entry.getValue()));
+			Map<HashTag, Integer> counts = counter.getWindowCounts();
+			for (Entry<HashTag, Integer> entry : counts.entrySet()) {
+				 collector.emit(new Values(entry.getKey().getContent(), entry.getValue()));
 				 writer.println(entry.getKey() + " " + entry.getValue());
 			}
 			writer.flush();
 		} else {
-			counter.inc((String)tuple.getValue(0), 1);
+			counter.inc(new HashTag((String)tuple.getValue(0)), 1);
 			collector.ack(tuple);
 		}
 	}
