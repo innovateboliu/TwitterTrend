@@ -17,8 +17,8 @@ import backtype.storm.tuple.Values;
 
 public class HashtagRankBolt extends BaseBasicBolt {
 	private static final long serialVersionUID = 4481610288723006295L;
-	private static final int DEFAULT_QUERY_FREQUENCY_IN_SECONDS = 5;
-	private static final int DEFAULT_COUNT = 10;
+	private static final int DEFAULT_QUERY_FREQUENCY_IN_SECONDS = 2;
+	private static final int DEFAULT_COUNT = 20;
 	private PriorityQueue<TwitterTrendUtils.Pair<String, Integer>> pq = new PriorityQueue<TwitterTrendUtils.Pair<String, Integer>>(
 			DEFAULT_COUNT);
 	private PrintWriter writer;
@@ -26,7 +26,7 @@ public class HashtagRankBolt extends BaseBasicBolt {
 	@Override
     public void prepare(Map stormConf, TopologyContext context) {
 		try {
-			writer = new PrintWriter("rankBolt.txt", "UTF-8");
+			writer = new PrintWriter("log/rankBolt.txt", "UTF-8");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {

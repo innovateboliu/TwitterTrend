@@ -37,7 +37,7 @@ public class HashtagCountBolt extends BaseRichBolt {
 			OutputCollector collector) {
 		this.collector = collector;
 		try {
-			writer = new PrintWriter("countBolt.txt", "UTF-8");
+			writer = new PrintWriter("log/countBolt.txt", "UTF-8");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {

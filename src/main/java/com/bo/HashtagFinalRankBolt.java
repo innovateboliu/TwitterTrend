@@ -18,8 +18,8 @@ import backtype.storm.tuple.Values;
 
 public class HashtagFinalRankBolt extends BaseBasicBolt {
 	private static final long serialVersionUID = -6355552661569011361L;
-	private static final int DEFAULT_QUERY_FREQUENCY_IN_SECONDS = 5;
-	private static final int DEFAULT_COUNT = 10;
+	private static final int DEFAULT_QUERY_FREQUENCY_IN_SECONDS = 2;
+	private static final int DEFAULT_COUNT = 20;
 	private PriorityQueue<TwitterTrendUtils.Pair<String, Integer>> pq = new PriorityQueue<TwitterTrendUtils.Pair<String, Integer>>(
 			DEFAULT_COUNT);
 	private PrintWriter writer;
