@@ -26,7 +26,7 @@ public class HashtagFinalRankBolt extends BaseBasicBolt {
 	@Override
     public void prepare(Map stormConf, TopologyContext context) {
 		try {
-			writer = new PrintWriter("finalRankBolt.txt", "UTF-8");
+			writer = new PrintWriter("log/finalRankBolt.txt", "UTF-8");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
@@ -48,6 +48,7 @@ public class HashtagFinalRankBolt extends BaseBasicBolt {
 			for (TwitterTrendUtils.Pair<String, Integer> pair : pq) {
 				writer.println(pair.first + " " + pair.second);
 			}
+			writer.println("------------------new data----------------");
 			writer.flush();
 		} else {
 			PriorityQueue<TwitterTrendUtils.Pair<String, Integer>> newPq = (PriorityQueue<TwitterTrendUtils.Pair<String, Integer>>) tuple.getValue(0);
