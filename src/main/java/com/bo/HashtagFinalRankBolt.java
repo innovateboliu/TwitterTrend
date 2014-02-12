@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import redis.clients.jedis.Jedis;
 import backtype.storm.Config;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.BasicOutputCollector;
