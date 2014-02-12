@@ -2,6 +2,7 @@ package com.bo;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -48,10 +49,10 @@ public class HashtagFinalRankBolt extends BaseBasicBolt {
 			for (TwitterTrendUtils.Pair<String, Integer> pair : pq) {
 				writer.println(pair.first + " " + pair.second);
 			}
-			writer.println("------------------new data----------------");
 			writer.flush();
 		} else {
 			PriorityQueue<TwitterTrendUtils.Pair<String, Integer>> newPq = (PriorityQueue<TwitterTrendUtils.Pair<String, Integer>>) tuple.getValue(0);
+			try {
 			for (TwitterTrendUtils.Pair<String, Integer> pair : newPq) {
 				if (pq.contains(pair)) {
 					pq.remove(pair);
@@ -60,6 +61,10 @@ public class HashtagFinalRankBolt extends BaseBasicBolt {
 				if (pq.size() > DEFAULT_COUNT) {
 					pq.remove();
 				}
+			}
+			}catch (ConcurrentModificationException e) {
+				writer.println("ConcurrentModificationException!!!");
+				throw e;
 			}
 		}
 	}

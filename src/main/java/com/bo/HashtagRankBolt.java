@@ -2,6 +2,7 @@ package com.bo;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -52,6 +53,7 @@ public class HashtagRankBolt extends BaseBasicBolt {
 			String key = (String) tuple.getValue(0);
 			int value = (Integer) tuple.getValue(1);
 			TwitterTrendUtils.Pair<String, Integer> newPair = new TwitterTrendUtils.Pair<String, Integer>(key, value);
+			try {
 			if (pq.contains(newPair)) {
 				pq.remove(newPair);
 			}
@@ -60,6 +62,10 @@ public class HashtagRankBolt extends BaseBasicBolt {
 				if (pq.size() > DEFAULT_COUNT) {
 					pq.remove();
 				}
+			}
+			} catch (ConcurrentModificationException e) {
+				writer.println("ConcurrentModificationException!!!");
+				throw e;
 			}
 		}
 	}
