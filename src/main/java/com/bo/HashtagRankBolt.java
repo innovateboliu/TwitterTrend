@@ -43,7 +43,6 @@ public class HashtagRankBolt extends BaseBasicBolt {
 	public void execute(Tuple tuple, BasicOutputCollector collector) {
 		if (TwitterTrendUtils.isTickTuple(tuple)) {
 			writer.println("fetch-------------------------------");
-			collector.emit(new Values(pq));
 			try {
 				for (TwitterTrendUtils.Pair<String, Integer> pair : pq) {
 					writer.println(pair.first + " " + pair.second);
@@ -53,6 +52,8 @@ public class HashtagRankBolt extends BaseBasicBolt {
 				throw e;
 			}
 			writer.flush();
+			collector.emit(new Values(pq));
+
 		} else {
 			String key = (String) tuple.getValue(0);
 			int value = (Integer) tuple.getValue(1);

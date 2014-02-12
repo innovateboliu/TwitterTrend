@@ -47,7 +47,7 @@ public class HashtagFinalRankBolt extends BaseBasicBolt {
 		
 		if (TwitterTrendUtils.isTickTuple(tuple)) {
 			writer.println("fetch-------------------------------");
-			collector.emit(new Values(pq));
+			
 			List<TwitterTrendUtils.Pair<String, Integer>> list = new ArrayList<TwitterTrendUtils.Pair<String,Integer>>();
 			try {
 				while (pq.size() > 0) {
@@ -64,6 +64,7 @@ public class HashtagFinalRankBolt extends BaseBasicBolt {
 //				writer.println(pair.first + " " + pair.second);
 //			}
 			writer.flush();
+			collector.emit(new Values(pq));
 		} else {
 			PriorityQueue<TwitterTrendUtils.Pair<String, Integer>> newPq = (PriorityQueue<TwitterTrendUtils.Pair<String, Integer>>) tuple.getValue(0);
 			try {
