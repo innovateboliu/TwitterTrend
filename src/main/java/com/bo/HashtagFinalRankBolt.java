@@ -28,12 +28,13 @@ public class HashtagFinalRankBolt extends BaseBasicBolt {
 	private PriorityQueue<TwitterTrendUtils.Pair<String, Integer>> pq = new PriorityQueue<TwitterTrendUtils.Pair<String, Integer>>(
 			DEFAULT_COUNT);
 	private PrintWriter writer;
-	Jedis jedis = new Jedis("nodejitsudb4112456240.redis.irstack.com", 6379);
+	Jedis jedis ;
 	
 	@Override
     public void prepare(Map stormConf, TopologyContext context) {
 		try {
 			writer = new PrintWriter("log/finalRankBolt.txt", "UTF-8");
+			jedis = new Jedis("nodejitsudb4112456240.redis.irstack.com", 6379);
 			jedis.auth("nodejitsudb4112456240.redis.irstack.com:f327cfe980c971946e80b8e975fbebb4");
 			jedis.connect();
 		} catch (FileNotFoundException e) {
