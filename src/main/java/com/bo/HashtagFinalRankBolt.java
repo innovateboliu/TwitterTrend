@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import redis.clients.jedis.Jedis;
 import backtype.storm.Config;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.BasicOutputCollector;
@@ -16,7 +17,9 @@ import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseBasicBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
-import backtype.storm.tuple.Values;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class HashtagFinalRankBolt extends BaseBasicBolt {
 	private static final long serialVersionUID = -6355552661569011361L;
@@ -25,11 +28,14 @@ public class HashtagFinalRankBolt extends BaseBasicBolt {
 	private PriorityQueue<TwitterTrendUtils.Pair<String, Integer>> pq = new PriorityQueue<TwitterTrendUtils.Pair<String, Integer>>(
 			DEFAULT_COUNT);
 	private PrintWriter writer;
+	Jedis jedis = new Jedis("nodejitsudb4112456240.redis.irstack.com", 6379);
 	
 	@Override
     public void prepare(Map stormConf, TopologyContext context) {
 		try {
 			writer = new PrintWriter("log/finalRankBolt.txt", "UTF-8");
+			jedis.auth("nodejitsudb4112456240.redis.irstack.com:f327cfe980c971946e80b8e975fbebb4");
+			jedis.connect();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
@@ -49,22 +55,26 @@ public class HashtagFinalRankBolt extends BaseBasicBolt {
 			writer.println("fetch-------------------------------");
 			
 			List<TwitterTrendUtils.Pair<String, Integer>> list = new ArrayList<TwitterTrendUtils.Pair<String,Integer>>();
+			List<Map<String,String>> rankingList = new ArrayList<Map<String,String>>();
 			try {
 				while (pq.size() > 0) {
 					list.add(pq.remove());
 				}
 				for (int i = list.size() - 1; i >= 0; i--) {
 					writer.println(list.get(i).first + " " + list.get(i).second);
+					Map<String, String> item = new HashMap<String, String>();
+					item.put("href", "www.google.com");
+					item.put("id", list.get(i).first);
+					item.put("cnt", list.get(i).second.toString());
+					rankingList.add(item);
 				}
+				Gson gson = new GsonBuilder().create();
+				jedis.publish("twitter_trend", gson.toJson(rankingList));
 			}catch (ConcurrentModificationException e) {
 				writer.println("ConcurrentModificationException up!!!");
 				throw e;
 			}
-//			for (TwitterTrendUtils.Pair<String, Integer> pair : pq) {
-//				writer.println(pair.first + " " + pair.second);
-//			}
 			writer.flush();
-//			collector.emit(new Values(pq));
 		} else {
 			PriorityQueue<TwitterTrendUtils.Pair<String, Integer>> newPq = (PriorityQueue<TwitterTrendUtils.Pair<String, Integer>>) tuple.getValue(0);
 			try {
