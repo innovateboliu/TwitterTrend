@@ -33,7 +33,7 @@ public class HashtagSpout extends BaseRichSpout {
     private static final String[] KEY_WORDS = { 
     	"hadoop", "big data", "bigdata", "cloudera", "data science", "data scientiest", 
     	"business intelligence", "mapreduce", "data warehouse", "data warehousing", "mahout",
-    	"hbase", "nosql", "newsql", "businessintelligence", "cloudcomputing"};
+    	"hbase", "nosql", "newsql", "businessintelligence", "cloudcomputing", "apache storm", "data engineer", "spark", "impala"};
 
     
     @Override
@@ -81,8 +81,7 @@ public class HashtagSpout extends BaseRichSpout {
 
         twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
         twitterStream.addListener(listener);
-//        twitterStream.filter(new FilterQuery().track(KEY_WORDS));
-        twitterStream.firehose(0);
+        twitterStream.filter(new FilterQuery().track(KEY_WORDS));
     }
 
     @Override
