@@ -64,7 +64,7 @@ public class HashtagFinalRankBolt extends BaseBasicBolt {
 				for (int i = list.size() - 1; i >= 0; i--) {
 					writer.println(list.get(i).first + " " + list.get(i).second);
 					Map<String, String> item = new HashMap<String, String>();
-					item.put("href", "www.google.com");
+					item.put("href", "https://twitter.com/search?q=%23"+list.get(i) + "&src=tyah");
 					item.put("id", list.get(i).first);
 					item.put("cnt", list.get(i).second.toString());
 					rankingList.add(item);
