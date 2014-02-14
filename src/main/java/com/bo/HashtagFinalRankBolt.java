@@ -19,6 +19,7 @@ import backtype.storm.topology.base.BaseBasicBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 
+import com.bo.TwitterTrendUtils.Pair;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -80,9 +81,10 @@ public class HashtagFinalRankBolt extends BaseBasicBolt {
 			}
 			writer.flush();
 		} else {
-			PriorityQueue<TwitterTrendUtils.Pair<String, Integer>> newPq = (PriorityQueue<TwitterTrendUtils.Pair<String, Integer>>) tuple.getValue(0);
+			PriorityQueue<Pair<String, Integer>> newPq = (PriorityQueue<Pair<String, Integer>>) tuple.getValue(0);
 			try {
-				for (TwitterTrendUtils.Pair<String, Integer> pair : newPq) {
+				for (Pair<String, Integer> oldPair : newPq) {
+					Pair<String, Integer> pair = new Pair<String, Integer>(oldPair.first, oldPair.second);
 					if (pq.contains(pair)) {
 						pq.remove(pair);
 					}
