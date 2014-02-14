@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -58,8 +59,10 @@ public class HashtagFinalRankBolt extends BaseBasicBolt {
 			List<TwitterTrendUtils.Pair<String, Integer>> list = new ArrayList<TwitterTrendUtils.Pair<String,Integer>>();
 			List<Map<String,String>> rankingList = new ArrayList<Map<String,String>>();
 			try {
-				while (pq.size() > 0) {
-					list.add(pq.remove());
+				Iterator<TwitterTrendUtils.Pair<String, Integer>> pqIter = pq.iterator();
+				while (pqIter.hasNext()) {
+					list.add(pqIter.next());
+					pqIter.remove();
 				}
 				for (int i = list.size() - 1; i >= 0; i--) {
 					writer.println(list.get(i).first + " " + list.get(i).second);
