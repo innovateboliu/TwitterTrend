@@ -81,7 +81,8 @@ public class HashtagSpout extends BaseRichSpout {
 
         twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
         twitterStream.addListener(listener);
-        twitterStream.filter(new FilterQuery().track(KEY_WORDS));
+//        twitterStream.filter(new FilterQuery().track(KEY_WORDS));
+        twitterStream.firehose(0);
     }
 
     @Override
