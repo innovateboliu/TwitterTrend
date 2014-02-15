@@ -16,11 +16,13 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 
+import com.bo.TwitterTrendUtils.Pair;
+
 public class HashtagRankBolt extends BaseBasicBolt {
 	private static final long serialVersionUID = 4481610288723006295L;
 	private static final int DEFAULT_QUERY_FREQUENCY_IN_SECONDS = 2;
 	private static final int DEFAULT_COUNT = 20;
-	private PriorityQueue<TwitterTrendUtils.Pair<String, Integer>> pq = new PriorityQueue<TwitterTrendUtils.Pair<String, Integer>>(
+	private PriorityQueue<Pair<String, Integer>> pq = new PriorityQueue<TwitterTrendUtils.Pair<String, Integer>>(
 			DEFAULT_COUNT);
 	private PrintWriter writer;
 
@@ -44,7 +46,7 @@ public class HashtagRankBolt extends BaseBasicBolt {
 		if (TwitterTrendUtils.isTickTuple(tuple)) {
 			writer.println("fetch-------------------------------");
 			try {
-				for (TwitterTrendUtils.Pair<String, Integer> pair : pq) {
+				for (Pair<String, Integer> pair : pq) {
 					writer.println(pair.first + " " + pair.second);
 				}
 			}catch (ConcurrentModificationException e) {
@@ -52,7 +54,11 @@ public class HashtagRankBolt extends BaseBasicBolt {
 				throw e;
 			}
 			writer.flush();
-			collector.emit(new Values(pq));
+			PriorityQueue<Pair<String, Integer>> copyPq = new PriorityQueue<Pair<String,Integer>>();
+			for (Pair<String, Integer> pair : pq) {
+				copyPq.add(new Pair<String, Integer>(pair.first, pair.second));
+			}
+			collector.emit(new Values(copyPq));
 
 		} else {
 			String key = (String) tuple.getValue(0);
