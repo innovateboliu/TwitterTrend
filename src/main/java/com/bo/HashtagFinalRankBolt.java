@@ -36,8 +36,16 @@ public class HashtagFinalRankBolt extends BaseBasicBolt {
     public void prepare(Map stormConf, TopologyContext context) {
 		try {
 			writer = new PrintWriter("log/finalRankBolt.txt", "UTF-8");
-			jedis = new Jedis("nodejitsudb4112456240.redis.irstack.com", 6379);
-			jedis.auth("nodejitsudb4112456240.redis.irstack.com:f327cfe980c971946e80b8e975fbebb4");
+			
+			// Nodejitsu redis server
+//			jedis = new Jedis("nodejitsudb4112456240.redis.irstack.com", 6379);
+//			jedis.auth("nodejitsudb4112456240.redis.irstack.com:f327cfe980c971946e80b8e975fbebb4");
+			
+			//Heroku redis server
+			jedis = new Jedis("pearlfish.redistogo.com", 9601);
+			jedis.auth("eade05d17a0cd9d29fa5933894412ea7");
+			
+			
 			jedis.connect();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
