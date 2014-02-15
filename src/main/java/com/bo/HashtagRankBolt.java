@@ -65,15 +65,15 @@ public class HashtagRankBolt extends BaseBasicBolt {
 			int value = (Integer) tuple.getValue(1);
 			TwitterTrendUtils.Pair<String, Integer> newPair = new TwitterTrendUtils.Pair<String, Integer>(key, value);
 			try {
-			if (pq.contains(newPair)) {
-				pq.remove(newPair);
-			}
-			if (key != null) {
-				pq.add(new TwitterTrendUtils.Pair<String, Integer>(key, value));
-				if (pq.size() > DEFAULT_COUNT) {
-					pq.remove();
+				if (pq.contains(newPair)) {
+					pq.remove(newPair);
 				}
-			}
+				if (key != null) {
+					pq.add(new TwitterTrendUtils.Pair<String, Integer>(key, value));
+					if (pq.size() > DEFAULT_COUNT) {
+						pq.remove();
+					}
+				}
 			} catch (ConcurrentModificationException e) {
 				writer.println("ConcurrentModificationException!!!");
 				throw e;
