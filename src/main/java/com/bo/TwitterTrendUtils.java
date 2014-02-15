@@ -31,7 +31,7 @@ public class TwitterTrendUtils {
 			if (diff != 0) {
 				return diff;
 			} else {
-				return ((String)this.first).compareTo((String)o.first);
+				return ((String)o.first).compareTo((String)this.first);
 			}
 		}
 	}
