@@ -41,9 +41,13 @@ public class HashtagFinalRankBolt extends BaseBasicBolt {
 //			jedis = new Jedis("nodejitsudb4112456240.redis.irstack.com", 6379);
 //			jedis.auth("nodejitsudb4112456240.redis.irstack.com:f327cfe980c971946e80b8e975fbebb4");
 			
-			//Heroku redis server
-			jedis = new Jedis("pearlfish.redistogo.com", 9601);
-			jedis.auth("eade05d17a0cd9d29fa5933894412ea7");
+			//Heroku redis to go server
+//			jedis = new Jedis("pearlfish.redistogo.com", 9601);
+//			jedis.auth("eade05d17a0cd9d29fa5933894412ea7");
+			
+			//Heroku redis cloud server
+			jedis = new Jedis("pub-redis-18039.us-east-1-4.2.ec2.garantiadata.com", 18039);
+			jedis.auth("oB7WsFKMNO2MNfzr");
 			
 			
 			jedis.connect();
