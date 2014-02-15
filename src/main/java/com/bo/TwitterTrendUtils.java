@@ -27,7 +27,12 @@ public class TwitterTrendUtils {
 
 		@Override
 		public int compareTo(Pair<T, V> o) {
-			return (Integer)this.second - (Integer)o.second;
+			int diff = (Integer)this.second - (Integer)o.second;
+			if (diff != 0) {
+				return diff;
+			} else {
+				return ((String)this.first).compareTo((String)o.first);
+			}
 		}
 	}
 	public static interface CompAndSeri <T> extends Comparable<T>, Serializable{
