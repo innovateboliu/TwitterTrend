@@ -1,7 +1,0 @@
-/home/hduser/examples/twitter/twitter-trend/src/main/java/com/bo/HashtagSpout.java
-/home/hduser/examples/twitter/twitter-trend/src/main/java/com/bo/SlideWindowCounter.java
-/home/hduser/examples/twitter/twitter-trend/src/main/java/com/bo/TwitterTrendUtils.java
-/home/hduser/examples/twitter/twitter-trend/src/main/java/com/bo/HashtagCountBolt.java
-/home/hduser/examples/twitter/twitter-trend/src/main/java/com/bo/TwitterTrend.java
-/home/hduser/examples/twitter/twitter-trend/src/main/java/com/bo/HashtagRankBolt.java
-/home/hduser/examples/twitter/twitter-trend/src/main/java/com/bo/HashtagFinalRankBolt.java
