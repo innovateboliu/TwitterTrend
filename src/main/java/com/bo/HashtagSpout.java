@@ -32,8 +32,8 @@ public class HashtagSpout extends BaseRichSpout {
     private static final String ACCESS_TOKEN_SECRET = "UnzR6FdCvPikrnkp33nI80STPbHfShfypuePfn18";
     private static final String[] KEY_WORDS = { 
     	"hadoop", "big data", "bigdata", "cloudera", "data science", "data scientiest", 
-    	"business intelligence", "mapreduce", "data warehouse", "data warehousing", "mahout",
-    	"hbase", "nosql", "newsql", "businessintelligence", "cloudcomputing", "apache storm", "data engineer", "spark", "impala"};
+    	"business intelligence", "mapreduce", "data warehouse", "data warehousing", "apache mahout",
+    	"hbase", "nosql", "newsql", "businessintelligence", "cloudcomputing", "apache storm", "data engineer", "apache spark", "impala", "klout", "apache flume"};
 
     
     @Override
