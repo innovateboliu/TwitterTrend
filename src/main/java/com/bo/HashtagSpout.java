@@ -2,7 +2,6 @@ package com.bo;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import twitter4j.FilterQuery;
 import twitter4j.HashtagEntity;
 import twitter4j.StallWarning;
 import twitter4j.Status;

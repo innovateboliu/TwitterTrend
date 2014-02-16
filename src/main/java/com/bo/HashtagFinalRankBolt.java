@@ -29,13 +29,10 @@ public class HashtagFinalRankBolt extends BaseBasicBolt {
 	private static final int DEFAULT_COUNT = 20;
 	private PriorityQueue<TwitterTrendUtils.Pair<String, Integer>> pq = new PriorityQueue<TwitterTrendUtils.Pair<String, Integer>>(
 			DEFAULT_COUNT);
-	private PrintWriter writer;
 	Jedis jedis ;
 	
 	@Override
     public void prepare(Map stormConf, TopologyContext context) {
-		try {
-			writer = new PrintWriter("log/finalRankBolt.txt", "UTF-8");
 			
 			// Nodejitsu redis server
 //			jedis = new Jedis("nodejitsudb4112456240.redis.irstack.com", 6379);
@@ -51,63 +48,44 @@ public class HashtagFinalRankBolt extends BaseBasicBolt {
 			
 			
 			jedis.connect();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
     }
 	
 	@Override
 	public void cleanup() {
-		writer.close();
 	}
 	
 	@Override
 	public void execute(Tuple tuple, BasicOutputCollector collector) {
 		
 		if (TwitterTrendUtils.isTickTuple(tuple)) {
-			writer.println("fetch-------------------------------");
 			
 			List<TwitterTrendUtils.Pair<String, Integer>> list = new ArrayList<TwitterTrendUtils.Pair<String,Integer>>();
 			List<Map<String,String>> rankingList = new ArrayList<Map<String,String>>();
-			try {
-				Iterator<TwitterTrendUtils.Pair<String, Integer>> pqIter = pq.iterator();
-				while (pqIter.hasNext()) {
-					list.add(pqIter.next());
-					pqIter.remove();
-				}
-				for (int i = list.size() - 1; i >= 0; i--) {
-					writer.println(list.get(i).first + " " + list.get(i).second);
-					Map<String, String> item = new HashMap<String, String>();
-					item.put("href", "https://twitter.com/search?q=%23"+list.get(i).first + "&src=tyah");
-					item.put("id", list.get(i).first);
-					item.put("cnt", list.get(i).second.toString());
-					rankingList.add(item);
-				}
-				Gson gson = new GsonBuilder().create();
-				jedis.publish("twitter_trend", gson.toJson(rankingList));
-			}catch (ConcurrentModificationException e) {
-				writer.println("ConcurrentModificationException up!!!");
-				throw e;
+			Iterator<TwitterTrendUtils.Pair<String, Integer>> pqIter = pq.iterator();
+			while (pqIter.hasNext()) {
+				list.add(pqIter.next());
+				pqIter.remove();
 			}
-			writer.flush();
+			for (int i = list.size() - 1; i >= 0; i--) {
+				Map<String, String> item = new HashMap<String, String>();
+				item.put("href", "https://twitter.com/search?q=%23"+list.get(i).first + "&src=tyah");
+				item.put("id", list.get(i).first);
+				item.put("cnt", list.get(i).second.toString());
+				rankingList.add(item);
+			}
+			Gson gson = new GsonBuilder().create();
+			jedis.publish("twitter_trend", gson.toJson(rankingList));
 		} else {
 			PriorityQueue<Pair<String, Integer>> newPq = (PriorityQueue<Pair<String, Integer>>) tuple.getValue(0);
-			try {
-				for (Pair<String, Integer> oldPair : newPq) {
-					Pair<String, Integer> pair = new Pair<String, Integer>(oldPair.first, oldPair.second);
-					if (pq.contains(pair)) {
-						pq.remove(pair);
-					}
-					pq.add(pair);
-					if (pq.size() > DEFAULT_COUNT) {
-						pq.remove();
-					}
+			for (Pair<String, Integer> oldPair : newPq) {
+				Pair<String, Integer> pair = new Pair<String, Integer>(oldPair.first, oldPair.second);
+				if (pq.contains(pair)) {
+					pq.remove(pair);
 				}
-			}catch (ConcurrentModificationException e) {
-				writer.println("ConcurrentModificationException!!!");
-				throw e;
+				pq.add(pair);
+				if (pq.size() > DEFAULT_COUNT) {
+					pq.remove();
+				}
 			}
 		}
 	}
