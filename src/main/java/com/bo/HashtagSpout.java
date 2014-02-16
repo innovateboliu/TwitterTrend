@@ -37,7 +37,7 @@ public class HashtagSpout extends BaseRichSpout {
     
     @Override
     public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
-        queue = new LinkedBlockingQueue<String>(1000000);
+        queue = new LinkedBlockingQueue<String>(200000);
         this.collector = collector;
         StatusListener listener = new StatusListener() {
 
