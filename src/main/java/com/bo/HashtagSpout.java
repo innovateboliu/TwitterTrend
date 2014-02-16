@@ -86,11 +86,12 @@ public class HashtagSpout extends BaseRichSpout {
 
     @Override
     public void nextTuple() {
-        String ret = queue.poll();
-        if(ret==null) {
+//        String ret = queue.poll();
+//        if(ret==null) {
+        if(queue.size() == 0) {
             Utils.sleep(50);
         } else {
-            this.collector.emit(new Values(ret));
+            this.collector.emit(new Values(queue));
         }
     }
 
