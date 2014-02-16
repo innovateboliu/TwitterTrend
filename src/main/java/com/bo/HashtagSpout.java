@@ -92,6 +92,7 @@ public class HashtagSpout extends BaseRichSpout {
             Utils.sleep(50);
         } else {
             this.collector.emit(new Values(queue));
+            queue.clear();
         }
     }
 
