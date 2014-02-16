@@ -8,14 +8,14 @@ public class TwitterTrend {
 	private TopologyBuilder builder;
 	private String topoName;
 	private Config topoConfig;
-	private int runtimeInSeconds;
+//	private int runtimeInSeconds;
 
 	public TwitterTrend() throws InterruptedException {
 	    builder = new TopologyBuilder();
 	    topoName = "slidingWindowCounts";
 	    topoConfig = new Config();
 	    topoConfig.setDebug(true);
-	    runtimeInSeconds = 1000000000;
+//	    runtimeInSeconds = 1000000000;
 
 		setup();
 	  }
@@ -34,9 +34,9 @@ public class TwitterTrend {
 	public void run() throws InterruptedException {
 		LocalCluster cluster = new LocalCluster();
 		cluster.submitTopology(topoName, topoConfig, builder.createTopology());
-		Thread.sleep((long) runtimeInSeconds * 1000);
-		cluster.killTopology(topoName);
-		cluster.shutdown();
+//		Thread.sleep((long) runtimeInSeconds * 1000);
+//		cluster.killTopology(topoName);
+//		cluster.shutdown();
 	}
 	/**
 	 * @param args
