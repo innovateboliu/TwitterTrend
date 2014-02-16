@@ -43,12 +43,12 @@ public class HashtagCountBolt extends BaseRichBolt {
 				 collector.emit(new Values(entry.getKey().getContent(), entry.getValue()));
 			}
 		} else {
-//			counter.inc(new HashTag((String)tuple.getValue(0)), 1);
+			counter.inc(new HashTag((String)tuple.getValue(0)), 1);
 			
-			LinkedBlockingQueue<String> queue = (LinkedBlockingQueue<String>)tuple.getValue(0);
-			for (String hashTag : queue) {
-				counter.inc(new HashTag(hashTag), 1);
-			}
+//			LinkedBlockingQueue<String> queue = (LinkedBlockingQueue<String>)tuple.getValue(0);
+//			for (String hashTag : queue) {
+//				counter.inc(new HashTag(hashTag), 1);
+//			}
 			
 			collector.ack(tuple);
 		}

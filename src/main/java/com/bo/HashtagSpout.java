@@ -91,7 +91,9 @@ public class HashtagSpout extends BaseRichSpout {
         if(queue.size() == 0) {
             Utils.sleep(50);
         } else {
-            this.collector.emit(new Values(queue));
+        	for (String hashTag : queue) {
+        		this.collector.emit(new Values(hashTag));
+        	}
             queue.clear();
         }
     }
