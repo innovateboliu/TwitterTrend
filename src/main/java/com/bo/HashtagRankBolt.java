@@ -41,15 +41,15 @@ public class HashtagRankBolt extends BaseBasicBolt {
 			String key = (String) tuple.getValue(0);
 			int value = (Integer) tuple.getValue(1);
 			TwitterTrendUtils.Pair<String, Integer> newPair = new TwitterTrendUtils.Pair<String, Integer>(key, value);
-				if (pq.contains(newPair)) {
-					pq.remove(newPair);
+			if (pq.contains(newPair)) {
+				pq.remove(newPair);
+			}
+			if (key != null) {
+				pq.add(new TwitterTrendUtils.Pair<String, Integer>(key, value));
+				if (pq.size() > DEFAULT_COUNT) {
+					pq.remove();
 				}
-				if (key != null) {
-					pq.add(new TwitterTrendUtils.Pair<String, Integer>(key, value));
-					if (pq.size() > DEFAULT_COUNT) {
-						pq.remove();
-					}
-				}
+			}
 		}
 	}
 
