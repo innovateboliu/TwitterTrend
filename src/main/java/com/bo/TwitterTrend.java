@@ -26,8 +26,8 @@ public class TwitterTrend {
 	    String rankerId = "ranker";
 	    String finalRankerId = "finalRanker";
 	    builder.setSpout(spoutId, new HashtagSpout());
-	    builder.setBolt(counterId, new HashtagCountBolt(1200, 2), 4).fieldsGrouping(spoutId, new Fields("hashtag"));
-	    builder.setBolt(rankerId, new HashtagRankBolt(), 4).fieldsGrouping(counterId, new Fields("hashtag"));
+	    builder.setBolt(counterId, new HashtagCountBolt(1200, 2)).fieldsGrouping(spoutId, new Fields("hashtag"));
+	    builder.setBolt(rankerId, new HashtagRankBolt()).fieldsGrouping(counterId, new Fields("hashtag"));
 	    builder.setBolt(finalRankerId, new HashtagFinalRankBolt()).globalGrouping(rankerId);
 	}
 	
