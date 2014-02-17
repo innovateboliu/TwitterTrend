@@ -3,9 +3,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SlideWindowCounter <T> implements Serializable{
@@ -39,6 +41,7 @@ public class SlideWindowCounter <T> implements Serializable{
 		int next = (cur + 1) % slotsNum;
 		cur = next;
 		
+		cleanCounter();
 		Map<T, Integer> result = new HashMap<T, Integer>();
 		for (Entry<T, List<Integer>> entry : counter.entrySet()) {
 			T key = entry.getKey();
@@ -56,9 +59,30 @@ public class SlideWindowCounter <T> implements Serializable{
 			}
 		}
 		
-		
-		
 		return result;
+	}
+	
+	private void cleanCounter() {
+		Set<T> toRemoveSet = new HashSet<T>();
+		for (Entry<T, List<Integer>> entry : counter.entrySet()) {
+			T key = entry.getKey();
+			List<Integer> counts = counter.get(key);
+			if (counts == null) {
+				toRemoveSet.add(key);
+				continue;
+			}
+			int sum = 0;
+			for (Integer i : counts) {
+				sum += i;
+			}
+			if (sum == 0) {
+				toRemoveSet.add(key);
+			}
+		}
+		
+		for (T key : toRemoveSet) {
+			counter.remove(key);
+		}
 	}
 	
 	
