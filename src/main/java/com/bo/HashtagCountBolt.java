@@ -40,7 +40,7 @@ public class HashtagCountBolt extends BaseRichBolt {
 		if (TwitterTrendUtils.isTickTuple(tuple)) {
 			Map<HashTag, Integer> counts = counter.getWindowCounts();
 			for (Entry<HashTag, Integer> entry : counts.entrySet()) {
-				 collector.emit(new Values(entry.getKey().getContent(), entry.getValue()));
+				 collector.emit(tuple, new Values(entry.getKey().getContent(), entry.getValue()));
 			}
 		} else {
 			counter.inc(new HashTag((String)tuple.getValue(0)), 1);
