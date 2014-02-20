@@ -1,7 +1,7 @@
 TwitterTrend
 ============
 
-1. [Shows the most popular buzz words on Twitter in real time. Backed by Storm.](#1)
+1. [Shows the most popular buzz words on Twitter in real time. Backed by Storm.](#1) 
 
 Service URL:
 ------------
