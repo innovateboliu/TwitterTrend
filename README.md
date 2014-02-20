@@ -1,10 +1,14 @@
 TwitterTrend
 ============
 
-Real time analysis showing the most popular # on Twitter about big data
+1. [Shows the most popular buzz words on Twitter in real time. Backed by Storm.](#1)
 
-Using Apache Storm
+Service URL:
+------------
+http://twitter-stat.herokuapp.com/
 
-mvn clean compile assembly:single
-
-storm jar target/twitter-trend-1.0-SNAPSHOT-jar-with-dependencies.jar com.bo.TwitterTrend | tee log
+Detailed Explaination:
+----------------
+1. <a name="1"></a>**The most popular buzz words**
+    - **Algorithm**: First count the times of buzz words mentioned in a time window. Secondly rank those buzz words on each bolt. Finally generate the ranking on one bolt.
+    
